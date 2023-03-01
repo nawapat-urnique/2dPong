@@ -7,10 +7,10 @@ using UnityEngine.SceneManagement;
 public class Ball : MonoBehaviour
 {
     public GameObject blocksParent;
-    public GameObject paddle;
     public TMP_Text livesText;
     public int lives = 5;
     public float speed = 10f;
+    public float speedMultiplier = 1f;
     public float maxVx = 7f;
     public float hitAngleChange = 20f;
     public float spawnMaxX = 3f;
@@ -26,6 +26,7 @@ public class Ball : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        GameObject paddle = GameObject.Find("Paddle");
         spawnHitMark = paddle.transform.position;
         spawnY = spawnHitMark.y + spawnDistance;
     }
@@ -83,8 +84,19 @@ public class Ball : MonoBehaviour
             float vx = rb.velocity.x + hitSpot * hitAngleChange;
             if (vx > maxVx) vx = maxVx;
             else if (vx < -maxVx) vx = -maxVx;
-            rb.velocity = new Vector3(vx, rb.velocity.y).normalized * speed;
+            rb.velocity = new Vector3(vx, rb.velocity.y).normalized * speed * speedMultiplier;
         }
+    }
+
+    public void modifySpeed(float mulitplier)
+    {
+        speedMultiplier = mulitplier;
+    }
+
+    public int resetSpeed()
+    {
+        speedMultiplier = 1f;
+        return 0;
     }
 
     private void updateBlockLeft()
